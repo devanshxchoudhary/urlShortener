@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  input{
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .shortened-url {
+    margin-top: 20px;
+    text-align: center;
+
+  }
+  
+  .shortened-url a {
+    font-family: Arial, sans-serif;
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+    </style>
+
+    
+</head>
+<body>
+  <h1>URL Shortener Assignment</h1>
+  <label for="long-url">Enter Long URL:</label>
+  <input type="text" id="long-url">
+  <button onclick="generateShortURL()">Shorten URL</button>
+  <p id="short-url"></p>
+
+  <script>
+    class HashMap {
+      constructor() {
+        this.hashmap = {};
+      }
+      hash(key) {
+        let hash = 0;
+        for (let i = 0; i < key.length; i++) {
+          hash = (hash << 5) + key.charCodeAt(i);
+          hash = hash & hash; 
+          hash = Math.abs(hash);
+        }
+        return hash.toString();
+      }
+
+      put(key, value) {
+        const hashedKey = this.hash(key);
+        this.hashmap[hashedKey] = value;
+      }
+
+      get(key) {
+        const hashedKey = this.hash(key);
+        return this.hashmap[hashedKey];
+      }
+    }
+    const lengthOfShortenUrl= 10;
+    function shortenURL(longURL) {
+      let shortURL = '';
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      const length = lengthOfShortenUrl;
+      for (let i = 0; i < length; i++) {
+        shortURL += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return shortURL;
+    }
+
+    const customMap = new HashMap();
+
+    function generateShortURL() {
+      const longURL = document.getElementById('long-url').value;
+      const shortURL = shortenURL(longURL);
+      customMap.put(shortURL, longURL);
+      document.getElementById('short-url').innerHTML = 'Shortened URL: <a href="#" onclick="redirectToLongURL(\'' + shortURL + '\')">' + shortURL + '</a>';
+    }
+
+    function redirectToLongURL(shortURL) {
+      const longURL = customMap.get(shortURL);
+      window.location.href = longURL;
+    }
+  </script>
+</body>
+</html>
